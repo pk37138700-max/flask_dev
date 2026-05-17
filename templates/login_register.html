@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial;
+        }
+        
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+        }
+        
+        .container {
+            width: 350px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid gray;
+            border-radius: 5px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .toggle-btn {
+            background: green;
+        }
+        
+        .toggle-btn:hover {
+            background: darkgreen;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        p {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Login Form -->
+        <div id="loginForm" class="form active">
+
+            <h2>Login</h2>
+
+            <form action="/login" method="POST">
+
+                <input type="name" name="name" placeholder="Enter name" required>
+
+                <input type="password" name="password" placeholder="Enter Password" required>
+
+                <button type="submit">Login</button>
+
+            </form>
+
+            <p>Don't have an account?</p>
+
+            <button class="toggle-btn" onclick="showRegister()">
+                Register
+            </button>
+
+        </div>
+
+
+        <!-- Register Form -->
+        <div id="registerForm" class="form">
+
+            <h2>Register</h2>
+
+            <form action="/register" method="POST">
+
+                <input type="text" name="name" placeholder="Enter Name" required>
+
+                <input type="email" name="email" placeholder="Enter Email" required>
+
+                <input type="password" name="password" placeholder="Create Password" required>
+
+                <button type="submit">Register</button>
+
+            </form>
+
+            <p>Already have an account?</p>
+
+            <button class="toggle-btn" onclick="showLogin()">
+                Login
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+        function showRegister() {
+            document.getElementById("loginForm").classList.remove("active");
+            document.getElementById("registerForm").classList.add("active");
+        }
+
+        function showLogin() {
+            document.getElementById("registerForm").classList.remove("active");
+            document.getElementById("loginForm").classList.add("active");
+        }
+    </script>
+
+</body>
+
+</html>
