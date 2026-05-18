@@ -4,19 +4,847 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
-    <title>home</title>
+    <title>Pawan — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+         :root {
+            --ink: #0d0d0d;
+            --paper: #f4f0e8;
+            --accent: #c84b2f;
+            --muted: #8a8070;
+            --line: rgba(13, 13, 13, 0.12);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: var(--paper);
+            color: var(--ink);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        /* Custom cursor */
+        
+        .cursor {
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+        }
+        
+        .cursor-ring {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--ink);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: all 0.18s ease;
+        }
+        /* Grain overlay */
+        
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.5;
+        }
+        /* Navbar */
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 48px;
+            mix-blend-mode: multiply;
+        }
+        
+        .navbar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 48px;
+            right: 48px;
+            height: 1px;
+            background: var(--line);
+        }
+        
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--ink);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 400;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        /* Hero Section */
+        
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding-top: 80px;
+        }
+        
+        .hero-left {
+            padding: 80px 48px 80px 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 1px solid var(--line);
+            position: relative;
+        }
+        
+        .hero-eyebrow {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 28px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.2s;
+        }
+        
+        .hero-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4rem, 8vw, 7.5rem);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            opacity: 0;
+            animation: fadeUp 0.9s ease forwards 0.4s;
+        }
+        
+        .hero-name em {
+            font-style: italic;
+            color: var(--accent);
+        }
+        
+        .hero-tagline {
+            margin-top: 36px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--muted);
+            max-width: 380px;
+            opacity: 0;
+            animation: fadeUp 0.9s ease forwards 0.6s;
+        }
+        
+        .hero-cta {
+            margin-top: 52px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            opacity: 0;
+            animation: fadeUp 0.9s ease forwards 0.8s;
+        }
+        
+        .btn-primary {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--paper);
+            background: var(--ink);
+            padding: 16px 32px;
+            text-decoration: none;
+            border: 1px solid var(--ink);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent);
+            transform: translateX(-101%);
+            transition: transform 0.35s ease;
+        }
+        
+        .btn-primary:hover::before {
+            transform: translateX(0);
+        }
+        
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-secondary {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            color: var(--ink);
+        }
+        
+        .btn-secondary::after {
+            content: '→';
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-secondary:hover::after {
+            transform: translateX(4px);
+        }
+        /* Hero Right */
+        
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 60px 48px;
+            gap: 40px;
+            position: relative;
+        }
+        
+        .hero-portrait {
+            position: absolute;
+            top: 100px;
+            right: 48px;
+            width: 260px;
+            height: 320px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 1.2s ease forwards 1s;
+        }
+        
+        .portrait-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #d9d3c5 0%, #c4bcaa 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .portrait-placeholder::before {
+            content: 'P';
+            font-family: 'Playfair Display', serif;
+            font-size: 120px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .portrait-frame {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: -16px;
+            bottom: -16px;
+            border: 1px solid var(--line);
+            pointer-events: none;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--line);
+            border: 1px solid var(--line);
+            opacity: 0;
+            animation: fadeUp 0.9s ease forwards 1.2s;
+            margin-top: auto;
+        }
+        
+        .stat-item {
+            background: var(--paper);
+            padding: 28px 24px;
+            transition: background 0.3s;
+        }
+        
+        .stat-item:hover {
+            background: #ece8df;
+        }
+        
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1;
+        }
+        
+        .stat-number sup {
+            font-size: 1rem;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+        /* Scrolling ticker */
+        
+        .ticker-wrap {
+            overflow: hidden;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 14px 0;
+            background: var(--ink);
+        }
+        
+        .ticker {
+            display: flex;
+            gap: 0;
+            animation: ticker 22s linear infinite;
+            width: max-content;
+        }
+        
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            padding-right: 32px;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--paper);
+            white-space: nowrap;
+        }
+        
+        .ticker-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        /* About strip */
+        
+        .about-strip {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            border-bottom: 1px solid var(--line);
+        }
+        
+        .about-strip-label {
+            padding: 60px 48px;
+            border-right: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        
+        .about-strip-content {
+            padding: 60px 48px;
+        }
+        
+        .about-strip-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-weight: 400;
+            line-height: 1.3;
+            margin-bottom: 24px;
+        }
+        
+        .about-strip-content h2 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+        
+        .about-strip-content p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--muted);
+            max-width: 540px;
+        }
+        /* Skills */
+        
+        .skills-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            border-bottom: 1px solid var(--line);
+        }
+        
+        .skill-card {
+            padding: 52px 40px;
+            border-right: 1px solid var(--line);
+            position: relative;
+            overflow: hidden;
+            transition: background 0.4s ease;
+        }
+        
+        .skill-card:last-child {
+            border-right: none;
+        }
+        
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .skill-card:hover {
+            background: #ece8df;
+        }
+        
+        .skill-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .skill-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.14em;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        
+        .skill-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 14px;
+        }
+        
+        .skill-desc {
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+        
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 24px;
+        }
+        
+        .tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            border: 1px solid var(--line);
+            padding: 5px 10px;
+        }
+        /* Footer strip */
+        
+        .footer-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 32px 48px;
+            border-top: 1px solid var(--line);
+        }
+        
+        .footer-strip p {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 28px;
+        }
+        
+        .footer-links a {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        /* Animations */
+        
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes ticker {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+        /* Responsive */
+        
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            .hero-left {
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+            }
+            .hero-portrait {
+                position: relative;
+                top: unset;
+                right: unset;
+                width: 180px;
+                height: 220px;
+                margin-bottom: 32px;
+                align-self: flex-start;
+            }
+            .hero-right {
+                padding-top: 40px;
+            }
+            .about-strip {
+                grid-template-columns: 1fr;
+            }
+            .about-strip-label {
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+                padding: 24px 32px;
+            }
+            .section-label {
+                writing-mode: horizontal-tb;
+            }
+            .skills-section {
+                grid-template-columns: 1fr;
+            }
+            .skill-card {
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+            }
+            .navbar {
+                padding: 20px 24px;
+            }
+            .navbar::after {
+                left: 24px;
+                right: 24px;
+            }
+            .hero-left,
+            .hero-right,
+            .about-strip-content,
+            .footer-strip {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <p>Pawan</p>
-    <div class="navbar">
-        <a href="#">home</a>
-        <a href="about">about</a>
 
-        <a href="projects">project</a>
-        <a href="contact">contact</a>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="nav-logo">Pawan.</a>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="about">About</a></li>
+            <li><a href="project">Projects</a></li>
+            <li><a href="contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-left">
+            <p class="hero-eyebrow">— Available for work</p>
+            <h1 class="hero-name">
+                Pawan<br><em>Creates.</em>
+            </h1>
+            <p class="hero-tagline">
+                A designer & developer crafting thoughtful digital experiences — where form meets function with intention.
+            </p>
+            <div class="hero-cta">
+                <a href="project" class="btn-primary"><span>View Projects</span></a>
+                <a href="contact" class="btn-secondary">Let's talk</a>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-portrait">
+                <div class="portrait-placeholder"></div>
+                <div class="portrait-frame"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">3<sup>+</sup></div>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">20<sup>+</sup></div>
+                    <div class="stat-label">Projects Shipped</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15<sup>+</sup></div>
+                    <div class="stat-label">Happy Clients</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Curiosity</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> UI Design
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Web Development
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Brand Identity
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Creative Direction
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Full-Stack Projects
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Problem Solving
+            </div>
+            <!-- Duplicate for seamless loop -->
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> UI Design
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Web Development
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Brand Identity
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Creative Direction
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Full-Stack Projects
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-dot"></span> Problem Solving
+            </div>
+        </div>
     </div>
+
+    <!-- About Strip -->
+    <section class="about-strip">
+        <div class="about-strip-label">
+            <span class="section-label">About Me</span>
+        </div>
+        <div class="about-strip-content">
+            <h2>I build things that<br><em>look good</em> and work better.</h2>
+            <p>
+                I'm Pawan — a developer and designer who believes the best products sit at the intersection of aesthetic clarity and technical precision. I work across the full stack, but I'm most passionate about the user-facing layer where design decisions live.
+            </p>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="skills-section">
+        <div class="skill-card">
+            <div class="skill-num">01</div>
+            <div class="skill-title">Design</div>
+            <div class="skill-desc">Creating interfaces that communicate clearly and feel effortless to use.</div>
+            <div class="skill-tags">
+                <span class="tag">Figma</span>
+                <span class="tag">UI/UX</span>
+                <span class="tag">Prototyping</span>
+            </div>
+        </div>
+        <div class="skill-card">
+            <div class="skill-num">02</div>
+            <div class="skill-title">Develop</div>
+            <div class="skill-desc">Turning ideas into clean, performant, and maintainable code.</div>
+            <div class="skill-tags">
+                <span class="tag">HTML/CSS</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">Python</span>
+            </div>
+        </div>
+        <div class="skill-card">
+            <div class="skill-num">03</div>
+            <div class="skill-title">Deploy</div>
+            <div class="skill-desc">Shipping products end-to-end with reliability and attention to detail.</div>
+            <div class="skill-tags">
+                <span class="tag">Flask</span>
+                <span class="tag">Git</span>
+                <span class="tag">Cloud</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-strip">
+        <p>© 2026 Pawan — All rights reserved.</p>
+        <div class="footer-links">
+            <a href="#">GitHub</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Twitter</a>
+        </div>
+    </footer>
+
+    <script>
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        const ring = document.getElementById('cursorRing');
+        let mx = 0,
+            my = 0,
+            rx = 0,
+            ry = 0;
+
+        document.addEventListener('mousemove', e => {
+            mx = e.clientX;
+            my = e.clientY;
+            cursor.style.left = mx + 'px';
+            cursor.style.top = my + 'px';
+        });
+
+        (function animateRing() {
+            rx += (mx - rx) * 0.12;
+            ry += (my - ry) * 0.12;
+            ring.style.left = rx + 'px';
+            ring.style.top = ry + 'px';
+            requestAnimationFrame(animateRing);
+        })();
+
+        // Scale ring on hoverable elements
+        const hoverables = document.querySelectorAll('a, button, .skill-card, .stat-item');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                ring.style.transform = 'translate(-50%, -50%) scale(1.8)';
+                ring.style.borderColor = 'var(--accent)';
+                cursor.style.opacity = '0';
+            });
+            el.addEventListener('mouseleave', () => {
+                ring.style.transform = 'translate(-50%, -50%) scale(1)';
+                ring.style.borderColor = 'var(--ink)';
+                cursor.style.opacity = '1';
+            });
+        });
+    </script>
+
 </body>
 
 </html>

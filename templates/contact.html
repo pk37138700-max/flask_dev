@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
+    <title>Contact Page</title>
 
     <style>
         * {
@@ -38,24 +38,43 @@
             color: orange;
         }
         
-        .about {
-            max-width: 800px;
+        .contact {
+            max-width: 600px;
             margin: 50px auto;
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact h1 {
             text-align: center;
-        }
-        
-        .about h1 {
             margin-bottom: 20px;
-            color: #ff6600;
+            color: #ff7300;
         }
         
-        .about p {
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #e27e0c;
+            color: white;
+            border: none;
+            border-radius: 5px;
             font-size: 18px;
-            line-height: 1.8;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #da7808;
         }
         
         footer {
@@ -81,12 +100,15 @@
         </nav>
     </header>
 
-    <section class="about">
-        <h1>About Me</h1>
+    <section class="contact">
+        <h1>Contact Me</h1>
 
-        <p>
-            Hello! My name is Pawan Kumar. I am a BCA student and web developer. I love creating websites using HTML, CSS, JavaScript and Flask. My goal is to become a professional software developer and improve my coding skills every day.
-        </p>
+        <form>
+            <input type="text" placeholder="Enter your name" required>
+            <input type="email" placeholder="Enter your email" required>
+            <textarea rows="5" placeholder="Enter your message"></textarea>
+            <button type="submit">Send Message</button>
+        </form>
     </section>
 
     <footer>

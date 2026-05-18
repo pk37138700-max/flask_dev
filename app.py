@@ -15,14 +15,24 @@ cursor = db.cursor()
 
 # Home Page
 @app.route('/')
+def index():
+    return render_template('home.html')
+
+
+# Home Page
+@app.route('/home')
 def home():
     return render_template('home.html')
 
 
-# Index Page
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 @app.route('/project')
 def project():
